@@ -1,0 +1,2226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyCertSG · Every achievement, kept.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #1B2A4A;
+    --ink-soft: #2E4066;
+    --parchment: #FAF6ED;
+    --parchment-dim: #F1EBDC;
+    --brass: #B8934A;
+    --brass-light: #D9BC82;
+    --sage: #7A9B7E;
+    --sage-dim: #E4ECE4;
+    --coral: #C4634F;
+    --coral-dim: #F6E5E1;
+    --charcoal: #2B2926;
+    --charcoal-soft: #5C574F;
+    --line: #E4DCC8;
+    --white: #FFFFFF;
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-l: 16px;
+    --shadow-card: 0 1px 2px rgba(27,42,74,0.06), 0 4px 16px rgba(27,42,74,0.06);
+    --shadow-hover: 0 2px 4px rgba(27,42,74,0.08), 0 12px 28px rgba(27,42,74,0.12);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    font-family:'Inter', -apple-system, sans-serif;
+    background: var(--parchment);
+    color: var(--charcoal);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin:0;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  button{ font-family: inherit; cursor:pointer; }
+  a{ color: inherit; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ---------- Layout shell ---------- */
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width: 248px;
+    flex-shrink:0;
+    background: var(--ink);
+    color: var(--parchment);
+    display:flex;
+    flex-direction:column;
+    padding: 28px 20px;
+    position: sticky;
+    top:0;
+    height:100vh;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding: 0 4px 28px 4px;
+    border-bottom: 1px solid rgba(250,246,237,0.12);
+    margin-bottom: 24px;
+  }
+  .brand-mark{
+    width:34px; height:34px;
+    border-radius: 8px;
+    background: linear-gradient(155deg, var(--brass-light), var(--brass));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    color: var(--ink);
+    font-size:16px;
+    flex-shrink:0;
+  }
+  .brand-name{
+    font-family:'Fraunces', serif;
+    font-size: 17px;
+    font-weight:600;
+    color: var(--parchment);
+    line-height:1.1;
+  }
+  .brand-sub{
+    font-size:10.5px;
+    color: rgba(250,246,237,0.55);
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    margin-top:2px;
+  }
+
+  .nav-group-label{
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color: rgba(250,246,237,0.4);
+    padding: 4px 12px;
+    margin-top: 18px;
+    margin-bottom:6px;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding: 10px 12px;
+    border-radius: var(--radius-s);
+    font-size:14px;
+    font-weight:500;
+    color: rgba(250,246,237,0.75);
+    background: transparent;
+    border:none;
+    width:100%;
+    text-align:left;
+    transition: background 0.18s var(--ease), color 0.18s var(--ease);
+    position:relative;
+  }
+  .nav-item:hover{ background: rgba(250,246,237,0.06); color: var(--parchment); }
+  .nav-item.active{ background: rgba(184,147,74,0.16); color: var(--brass-light); }
+  .nav-item.active::before{
+    content:'';
+    position:absolute; left:-20px; top:50%; transform:translateY(-50%);
+    width:3px; height:18px;
+    background: var(--brass);
+    border-radius: 0 3px 3px 0;
+  }
+  .nav-icon{ width:17px; height:17px; flex-shrink:0; opacity:0.9; }
+
+  .sidebar-footer{
+    margin-top:auto;
+    padding-top:16px;
+    border-top: 1px solid rgba(250,246,237,0.12);
+  }
+  .profile-trigger{ transition: background 0.18s var(--ease); border-radius: var(--radius-s); }
+  .profile-trigger:hover{ background: rgba(250,246,237,0.06) !important; }
+
+  /* Role switcher */
+  .role-switch{
+    display:flex;
+    background: rgba(250,246,237,0.08);
+    border-radius: var(--radius-s);
+    padding:3px;
+    gap:3px;
+    margin-bottom:14px;
+  }
+  .role-switch button{
+    flex:1;
+    padding:7px 8px;
+    border:none;
+    background:transparent;
+    color: rgba(250,246,237,0.55);
+    border-radius:5px;
+    font-size:12.5px;
+    font-weight:600;
+    transition: all 0.2s var(--ease);
+  }
+  .role-switch button.active{
+    background: var(--parchment);
+    color: var(--ink);
+  }
+
+  .child-pill{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 10px;
+    border-radius: var(--radius-s);
+    background: rgba(250,246,237,0.06);
+    border: 1px solid rgba(250,246,237,0.1);
+  }
+  .child-select{
+    width:100%; text-align:left; border:none; cursor:pointer;
+    background: rgba(250,246,237,0.06);
+    margin-bottom:6px;
+    transition: all 0.18s var(--ease);
+  }
+  .child-select:hover{ background: rgba(250,246,237,0.12); }
+  .child-select.active{
+    background: rgba(184,147,74,0.16);
+    border: 1px solid rgba(184,147,74,0.35);
+  }
+  .child-select.active .child-pill-name{ color: var(--brass-light); }
+  .child-avatar{
+    width:30px;height:30px;border-radius:50%;
+    background: var(--sage);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700; font-size:12.5px; color:white;
+    flex-shrink:0;
+  }
+  .child-pill-name{ font-size:13px; font-weight:600; color: var(--parchment); }
+  .child-pill-stage{ font-size:10.5px; color: rgba(250,246,237,0.5); }
+
+  /* ---------- Main content ---------- */
+  .main{
+    flex:1;
+    min-width:0;
+    padding: 32px 44px 80px;
+    max-width: 1180px;
+  }
+
+  .view{ display:none; }
+  .view.active{ display:block; animation: viewIn 0.38s var(--ease); }
+  @keyframes viewIn{
+    from{ opacity:0; transform: translateY(6px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom: 28px;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .eyebrow{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color: var(--brass);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .page-title{ font-size: 28px; font-weight:600; }
+  .page-desc{ color: var(--charcoal-soft); font-size:14.5px; margin-top:6px; max-width: 520px; }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-s);
+    font-size:13.5px;
+    font-weight:600;
+    border: none;
+    transition: transform 0.15s var(--ease), box-shadow 0.15s var(--ease), background 0.15s var(--ease);
+  }
+  .btn:active{ transform: scale(0.97); }
+  .btn-primary{ background: var(--ink); color: var(--parchment); }
+  .btn-primary:hover{ background: var(--ink-soft); box-shadow: var(--shadow-hover); }
+  .btn-brass{ background: var(--brass); color: var(--ink); }
+  .btn-brass:hover{ box-shadow: 0 8px 20px rgba(184,147,74,0.35); }
+  .btn-ghost{ background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+  .btn-ghost:hover{ background: var(--parchment-dim); border-color: var(--ink); }
+  .btn-sm{ padding: 7px 13px; font-size:12.5px; }
+
+  /* ---------- Cards / grid ---------- */
+  .card{
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .stat-row{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:14px;
+    margin-bottom: 26px;
+  }
+  .stat-card{
+    padding: 18px 20px;
+  }
+  .stat-num{ font-family:'Fraunces', serif; font-size: 30px; font-weight:600; color: var(--ink); }
+  .stat-label{ font-size:12px; color: var(--charcoal-soft); margin-top:2px; }
+  .stat-card.accent-brass .stat-num{ color: var(--brass); }
+  .stat-card.accent-sage .stat-num{ color: var(--sage); }
+  .stat-card.accent-coral .stat-num{ color: var(--coral); }
+
+  .cert-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
+  }
+  .cert-card{
+    padding: 16px;
+    cursor: pointer;
+    animation: cardIn 0.45s var(--ease) both;
+  }
+  @keyframes cardIn{
+    from{ opacity:0; transform: translateY(10px) scale(0.98); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+  .cert-card:hover{ box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+  .cert-thumb{
+    height:110px;
+    border-radius: var(--radius-s);
+    margin-bottom: 12px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .cert-thumb svg{ width:38px; height:38px; opacity:0.55; }
+  .cert-cat-badge{
+    position:absolute; top:8px; left:8px;
+    font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+    padding:3px 7px; border-radius:20px;
+    background: rgba(255,255,255,0.85);
+    color: var(--ink);
+  }
+  .cert-title{ font-size:14px; font-weight:600; color: var(--ink); margin-bottom:3px; line-height:1.3; }
+  .cert-meta{ font-size:12px; color: var(--charcoal-soft); }
+  .cert-award{
+    display:inline-block; margin-top:8px;
+    font-size:11px; font-weight:600; color: var(--brass);
+    background: rgba(184,147,74,0.1); padding:3px 8px; border-radius:20px;
+  }
+
+  /* category color coding for thumbs */
+  .cat-academic{ background: linear-gradient(155deg, #E9EEF7, #D8E2F2); }
+  .cat-sports{ background: linear-gradient(155deg, var(--sage-dim), #D3E4D5); }
+  .cat-arts{ background: linear-gradient(155deg, #F3E7EE, #EAD3E0); }
+  .cat-leadership{ background: linear-gradient(155deg, #FBEFDD, #F5DFB8); }
+  .cat-community{ background: linear-gradient(155deg, var(--coral-dim), #F0D2C9); }
+
+  /* ---------- Timeline ---------- */
+  .timeline-wrap{ position:relative; padding-left: 8px; }
+  .timeline-filters{
+    display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap;
+  }
+  .filter-chip{
+    padding: 7px 14px; border-radius: 20px; font-size:12.5px; font-weight:600;
+    border: 1.5px solid var(--line); background: var(--white); color: var(--charcoal-soft);
+    transition: all 0.18s var(--ease);
+    display:flex; align-items:center; gap:6px;
+  }
+  .filter-chip .dot{ width:7px; height:7px; border-radius:50%; }
+  .filter-chip:hover{ border-color: var(--ink); }
+  .filter-chip.active{ background: var(--ink); color: var(--parchment); border-color: var(--ink); }
+  .filter-chip.active .dot{ box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+
+  .ledger{
+    position:relative;
+    margin-left: 6px;
+    padding-left: 34px;
+    border-left: 3px solid var(--brass-light);
+  }
+  .ledger.has-gap .gap-segment{
+    border-left: 3px dashed var(--coral);
+    margin-left:-37px; padding-left:34px;
+    opacity: 0.85;
+  }
+
+  .year-block{ margin-bottom: 8px; position:relative; }
+  .year-marker{
+    position:absolute; left:-46px; top:2px;
+    width:34px; height:34px; border-radius:50%;
+    background: var(--brass);
+    color: var(--white);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-weight:700; font-size:11.5px;
+    box-shadow: 0 0 0 5px var(--parchment);
+  }
+  .year-heading{
+    display:flex; align-items:baseline; gap:10px;
+    margin-left:0; margin-bottom:14px; padding-top:4px;
+  }
+  .year-heading h3{ font-size:19px; }
+  .year-stage{ font-size:12px; color: var(--charcoal-soft); font-weight:500; }
+
+  .gap-banner{
+    display:flex; align-items:center; gap:10px;
+    background: var(--coral-dim);
+    border: 1px dashed var(--coral);
+    border-radius: var(--radius-m);
+    padding: 12px 16px;
+    margin: 4px 0 24px 0;
+    font-size:13px;
+    color: #8A3F2F;
+  }
+  .gap-banner svg{ width:16px; height:16px; flex-shrink:0; }
+  .gap-banner strong{ font-weight:700; }
+
+  /* Standalone gap callout, kept separate from the year flow */
+  .gap-callout{
+    display:flex; align-items:flex-start; gap:14px;
+    background: var(--white);
+    border: 1px solid var(--coral);
+    border-left: 4px solid var(--coral);
+    border-radius: var(--radius-m);
+    padding: 16px 18px;
+    margin-bottom: 28px;
+  }
+  .gap-callout-icon{
+    width:32px; height:32px; border-radius:50%; flex-shrink:0;
+    background: var(--coral-dim);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gap-callout-icon svg{ width:16px; height:16px; color: var(--coral); }
+  .gap-callout-title{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color: var(--coral); margin-bottom:4px; }
+  .gap-callout-text{ font-size:13.5px; color: var(--charcoal-soft); line-height:1.55; }
+
+  .ledger-empty{
+    padding: 40px 20px;
+    text-align:center;
+    color: var(--charcoal-soft);
+    font-size:13.5px;
+  }
+
+  .timeline-entries{ display:flex; flex-direction:column; gap:12px; margin-bottom: 30px; }
+  .t-entry{
+    display:flex; align-items:center; gap:14px;
+    padding: 14px 16px;
+    background: var(--white);
+    border:1px solid var(--line);
+    border-radius: var(--radius-m);
+    transition: all 0.2s var(--ease);
+  }
+  .t-entry:hover{ box-shadow: var(--shadow-hover); transform: translateX(3px); }
+  .t-cat-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .t-entry-title{ font-size:14px; font-weight:600; color:var(--ink); }
+  .t-entry-meta{ font-size:12px; color: var(--charcoal-soft); margin-top:2px; }
+  .t-entry-award{
+    margin-left:auto; flex-shrink:0;
+    font-size:11px; font-weight:700; color: var(--brass);
+  }
+
+  .cat-dot-academic{ background:#7C93C9; }
+  .cat-dot-sports{ background: var(--sage); }
+  .cat-dot-arts{ background:#B96F92; }
+  .cat-dot-leadership{ background: var(--brass); }
+  .cat-dot-community{ background: var(--coral); }
+
+  /* ---------- Capture flow ---------- */
+  .capture-shell{
+    max-width: 640px;
+  }
+  .dropzone{
+    border: 2px dashed var(--brass-light);
+    border-radius: var(--radius-l);
+    background: var(--white);
+    padding: 52px 30px;
+    text-align:center;
+    transition: all 0.25s var(--ease);
+    cursor:pointer;
+  }
+  .dropzone:hover, .dropzone.drag{
+    border-color: var(--brass);
+    background: #FFFCF5;
+    transform: scale(1.005);
+  }
+  .dropzone-icon{
+    width:52px; height:52px; margin: 0 auto 16px;
+    border-radius:50%;
+    background: rgba(184,147,74,0.12);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .dropzone-icon svg{ width:24px; height:24px; color: var(--brass); }
+  .dropzone h3{ font-size:16px; margin-bottom:6px; }
+  .dropzone p{ font-size:13px; color: var(--charcoal-soft); margin:0; }
+
+  .scan-progress{ display:none; margin-top: 22px; }
+  .scan-progress.active{ display:block; animation: viewIn 0.3s var(--ease); }
+  .scan-bar-track{
+    height:6px; border-radius:10px; background: var(--parchment-dim); overflow:hidden;
+  }
+  .scan-bar-fill{
+    height:100%; width:0%; border-radius:10px;
+    background: linear-gradient(90deg, var(--brass), var(--sage));
+    transition: width 1.8s var(--ease);
+  }
+  .scan-label{ font-size:12.5px; color: var(--charcoal-soft); margin-top:9px; display:flex; align-items:center; gap:7px; }
+  .scan-label .spinner{
+    width:12px;height:12px; border-radius:50%;
+    border: 2px solid var(--line); border-top-color: var(--brass);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .review-panel{
+    display:none;
+    margin-top: 24px;
+    animation: viewIn 0.4s var(--ease);
+  }
+  .review-panel.active{ display:block; }
+  .review-head{
+    display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .review-head svg{ width:18px; height:18px; color: var(--sage); }
+  .review-head span{ font-size:13px; font-weight:600; color: var(--sage); }
+
+  .field-row{ margin-bottom:16px; }
+  .field-row label{
+    display:block; font-size:11.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.04em; color: var(--charcoal-soft); margin-bottom:6px;
+  }
+  .field-row input, .field-row select, .field-row textarea{
+    width:100%;
+    padding: 11px 13px;
+    border-radius: var(--radius-s);
+    border: 1.5px solid var(--line);
+    background: var(--white);
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    color: var(--charcoal);
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  }
+  .field-row input:focus, .field-row select:focus, .field-row textarea:focus{
+    outline:none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(184,147,74,0.15);
+  }
+  .field-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+
+  .review-actions{ display:flex; gap:10px; margin-top: 22px; }
+
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--parchment);
+    padding: 13px 22px; border-radius: 30px;
+    font-size:13.5px; font-weight:600;
+    display:flex; align-items:center; gap:9px;
+    opacity:0; pointer-events:none;
+    transition: all 0.35s var(--ease);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    z-index: 999;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); pointer-events:auto; }
+  .toast svg{ width:16px; height:16px; color: var(--sage); }
+
+  /* ---------- Cert detail modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background: rgba(27,42,74,0.45);
+    backdrop-filter: blur(2px);
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none;
+    transition: opacity 0.25s var(--ease);
+    z-index: 998;
+    padding: 24px;
+  }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .modal-panel{
+    background: var(--parchment);
+    border-radius: var(--radius-l);
+    max-width: 440px; width:100%;
+    padding: 30px;
+    position:relative;
+    box-shadow: 0 24px 60px rgba(27,42,74,0.3);
+    transform: translateY(14px) scale(0.97);
+    transition: transform 0.3s var(--ease);
+  }
+  .modal-overlay.show .modal-panel{ transform: translateY(0) scale(1); }
+  .modal-close{
+    position:absolute; top:16px; right:16px;
+    width:30px; height:30px; border-radius:50%;
+    background: var(--white); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    transition: all 0.18s var(--ease);
+  }
+  .modal-close:hover{ background: var(--parchment-dim); transform: rotate(90deg); }
+  .modal-close svg{ width:14px; height:14px; color: var(--charcoal-soft); }
+
+  .modal-thumb{
+    height:120px; border-radius: var(--radius-m);
+    margin-bottom:16px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .modal-thumb svg{ width:34px; height:34px; opacity:0.6; }
+  .modal-badge{ position:static; display:inline-flex; margin-bottom:10px; background: var(--parchment-dim); }
+  .modal-title{ font-size:19px; margin-bottom:18px; line-height:1.3; }
+  .modal-meta-row{
+    display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px;
+    padding-bottom:16px; margin-bottom:16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .modal-meta-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; color: var(--charcoal-soft); font-weight:700; margin-bottom:4px; }
+  .modal-meta-value{ font-size:13px; color: var(--ink); font-weight:600; }
+  .modal-award-row{ margin-bottom:22px; }
+  .modal-award-value{ font-size:16px; color: var(--brass); font-weight:700; font-family:'Fraunces', serif; }
+  .modal-actions{ display:flex; gap:10px; }
+
+  /* ---------- AI Tools hub ---------- */
+  .tool-tabs{
+    display:flex; gap:6px; margin-bottom:26px;
+    border-bottom: 1.5px solid var(--line);
+  }
+  .tool-tab{
+    padding: 11px 18px;
+    background:none; border:none;
+    font-size:13.5px; font-weight:600; color: var(--charcoal-soft);
+    border-bottom: 2.5px solid transparent;
+    margin-bottom:-1.5px;
+    transition: all 0.2s var(--ease);
+    display:flex; align-items:center; gap:7px;
+  }
+  .tool-tab:hover{ color: var(--ink); }
+  .tool-tab.active{ color: var(--ink); border-bottom-color: var(--brass); }
+  .tool-tab svg{ width:15px; height:15px; }
+
+  .tool-panel{ display:none; animation: viewIn 0.35s var(--ease); }
+  .tool-panel.active{ display:block; }
+
+  .tool-layout{
+    display:grid; grid-template-columns: 340px 1fr; gap:24px; align-items:start;
+  }
+  .tool-form{ padding: 22px; }
+  .tool-form h3{ font-size:15px; margin-bottom: 4px; }
+  .tool-form .sub{ font-size:12.5px; color:var(--charcoal-soft); margin-bottom:18px; }
+
+  .result-panel{
+    padding: 26px 28px;
+    min-height: 320px;
+    position:relative;
+  }
+  .result-empty{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; height: 280px; color: var(--charcoal-soft);
+  }
+  .result-empty svg{ width:36px; height:36px; margin-bottom:14px; opacity:0.4; }
+  .result-empty p{ font-size:13px; max-width:220px; }
+
+  .result-loading{ display:none; }
+  .result-loading.active{ display:flex; flex-direction:column; align-items:center; justify-content:center; height:280px; gap:14px; }
+  .pulse-ring{
+    width:44px; height:44px; border-radius:50%;
+    border: 3px solid var(--sage-dim); border-top-color: var(--sage);
+    animation: spin 0.9s linear infinite;
+  }
+  .result-loading span{ font-size:13px; color: var(--charcoal-soft); font-weight:500; }
+
+  .result-content{ display:none; }
+  .result-content.active{ display:block; animation: viewIn 0.4s var(--ease); }
+
+  .result-block{
+    background: var(--parchment);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    padding: 20px;
+    margin-bottom: 14px;
+    position:relative;
+  }
+  .result-block-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .result-block-head h4{ font-size:13px; font-weight:700; color: var(--ink); text-transform:uppercase; letter-spacing:0.03em; }
+  .copy-btn{
+    font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:6px;
+    background: var(--white); border:1px solid var(--line); color: var(--charcoal-soft);
+    display:flex; align-items:center; gap:5px;
+    transition: all 0.18s var(--ease);
+  }
+  .copy-btn:hover{ border-color: var(--ink); color: var(--ink); }
+  .copy-btn.copied{ background: var(--sage-dim); border-color: var(--sage); color: #3E5E42; }
+  .copy-btn svg{ width:12px; height:12px; }
+
+  .result-text{ font-size:13.5px; line-height:1.7; color: var(--charcoal); white-space:pre-line; }
+  .result-text.mono-style{ font-family:'JetBrains Mono', monospace; font-size:12.5px; }
+
+  .match-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 13px 0; border-bottom:1px solid var(--line);
+  }
+  .match-item:last-child{ border-bottom:none; }
+  .match-name{ font-size:13.5px; font-weight:600; color:var(--ink); }
+  .match-why{ font-size:12px; color:var(--charcoal-soft); margin-top:3px; }
+  .match-score{
+    font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px;
+    background: var(--sage-dim); color:#3E5E42; flex-shrink:0; margin-left:12px;
+  }
+
+  /* ---------- AI chatbot ---------- */
+  .chat-shell{
+    max-width: 680px;
+    display:flex; flex-direction:column;
+    height: 560px;
+  }
+  .chat-header{
+    display:flex; align-items:center; gap:12px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .chat-header-icon{
+    width:36px; height:36px; border-radius:9px; flex-shrink:0;
+    background: rgba(184,147,74,0.14);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .chat-header-icon svg{ width:18px; height:18px; color: var(--brass); }
+  .chat-header-title{ font-size:14.5px; font-weight:700; color: var(--ink); }
+  .chat-header-sub{ font-size:11.5px; color: var(--charcoal-soft); margin-top:1px; }
+
+  .chat-messages{
+    flex:1; overflow-y:auto;
+    padding: 20px 22px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .chat-msg{ display:flex; }
+  .chat-msg.user{ justify-content:flex-end; }
+  .chat-bubble{
+    max-width: 78%;
+    padding: 11px 15px;
+    border-radius: 14px;
+    font-size:13.5px;
+    line-height:1.55;
+    animation: viewIn 0.3s var(--ease);
+    white-space: pre-line;
+  }
+  .chat-msg.bot .chat-bubble{
+    background: var(--parchment-dim);
+    color: var(--charcoal);
+    border-bottom-left-radius:4px;
+  }
+  .chat-msg.user .chat-bubble{
+    background: var(--ink);
+    color: var(--parchment);
+    border-bottom-right-radius:4px;
+  }
+  .chat-typing{
+    display:flex; gap:4px; padding: 13px 15px;
+    background: var(--parchment-dim); border-radius:14px; border-bottom-left-radius:4px;
+    width: fit-content;
+  }
+  .chat-typing span{
+    width:6px; height:6px; border-radius:50%; background: var(--charcoal-soft);
+    animation: typingBounce 1.1s infinite ease-in-out;
+  }
+  .chat-typing span:nth-child(2){ animation-delay: 0.15s; }
+  .chat-typing span:nth-child(3){ animation-delay: 0.3s; }
+  @keyframes typingBounce{
+    0%, 60%, 100%{ transform: translateY(0); opacity:0.5; }
+    30%{ transform: translateY(-4px); opacity:1; }
+  }
+
+  .chat-suggestions{
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding: 0 22px 14px;
+  }
+  .chat-chip{
+    font-size:12px; font-weight:600; color: var(--charcoal-soft);
+    background: var(--white); border: 1px solid var(--line);
+    padding: 7px 12px; border-radius: 20px;
+    transition: all 0.18s var(--ease);
+  }
+  .chat-chip:hover{ border-color: var(--brass); color: var(--ink); }
+
+  .chat-input-row{
+    display:flex; gap:10px;
+    padding: 16px 22px;
+    border-top: 1px solid var(--line);
+  }
+  .chat-input-row input{
+    flex:1;
+    padding: 11px 14px;
+    border-radius: var(--radius-s);
+    border: 1.5px solid var(--line);
+    font-family:'Inter', sans-serif;
+    font-size:13.5px;
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  }
+  .chat-input-row input:focus{
+    outline:none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(184,147,74,0.15);
+  }
+
+  /* ---------- LinkedIn module ---------- */
+  .li-card{
+    padding:22px; display:flex; gap:16px; align-items:flex-start;
+    margin-bottom:14px;
+  }
+  .li-icon{
+    width:40px; height:40px; border-radius:9px; flex-shrink:0;
+    background: #0A66C2; display:flex; align-items:center; justify-content:center;
+  }
+  .li-icon svg{ width:20px; height:20px; fill:white; }
+  .li-body h4{ font-size:14.5px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+  .li-body p{ font-size:12.5px; color:var(--charcoal-soft); margin:0 0 12px 0; line-height:1.5; }
+  .li-note{
+    font-size:11px; color: var(--charcoal-soft); background: var(--parchment-dim);
+    padding:8px 11px; border-radius:6px; margin-top:10px; display:flex; gap:7px; align-items:flex-start;
+  }
+  .li-note svg{ width:13px; height:13px; flex-shrink:0; margin-top:1px; color: var(--brass); }
+
+  .cert-pick-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 14px; border:1px solid var(--line); border-radius:8px; margin-bottom:8px;
+    font-size:13px; background: var(--white);
+  }
+  .cert-pick-row .name{ font-weight:600; color:var(--ink); }
+  .cert-pick-row .issuer{ font-size:11.5px; color:var(--charcoal-soft); }
+
+  /* ---------- Access notice for age gate ---------- */
+  .locked-view{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: 70px 30px; color: var(--charcoal-soft);
+  }
+  .locked-view svg{ width:38px;height:38px; margin-bottom:16px; opacity:0.4; }
+
+  /* ---------- Empty dashboard tags ---------- */
+  .section-label{
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+    color: var(--charcoal-soft); margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  }
+  .section-label::after{ content:''; flex:1; height:1px; background: var(--line); }
+
+  /* ---------- Profile page ---------- */
+  .profile-layout{ max-width: 560px; }
+  .profile-card-main{ padding: 28px; }
+  .pfp-row{
+    display:flex; align-items:center; gap:16px;
+    margin-bottom: 24px;
+  }
+  .pfp-preview{
+    width:64px; height:64px; border-radius:50%;
+    background: linear-gradient(155deg, var(--brass-light), var(--brass));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-weight:700; font-size:20px; color: var(--ink);
+    flex-shrink:0;
+    transition: transform 0.3s var(--ease);
+  }
+  .pfp-preview.changed{ animation: pfpPop 0.5s var(--ease); }
+  @keyframes pfpPop{
+    0%{ transform: scale(1); }
+    40%{ transform: scale(1.12) rotate(-4deg); }
+    100%{ transform: scale(1) rotate(0); }
+  }
+  .pfp-hint{ font-size:11.5px; color: var(--charcoal-soft); margin-top:6px; }
+
+  .goal-hint{
+    display:flex; align-items:flex-start; gap:8px;
+    font-size:12px; color: var(--charcoal-soft);
+    background: var(--parchment-dim);
+    border-radius: var(--radius-s);
+    padding: 10px 13px;
+    margin-top: 10px;
+    line-height:1.5;
+  }
+  .goal-hint svg{ width:14px; height:14px; color: var(--brass); flex-shrink:0; margin-top:1px; }
+
+  @media (max-width: 980px){
+    .tool-layout{ grid-template-columns: 1fr; }
+    .stat-row{ grid-template-columns: repeat(2,1fr); }
+  }
+
+  /* ---------- Auth screen ---------- */
+  .auth-shell{
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--ink);
+    padding: 24px;
+  }
+  .auth-card{
+    background: var(--parchment);
+    border-radius: var(--radius-l);
+    padding: 36px 34px;
+    max-width: 380px;
+    width:100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+  }
+  .auth-brand{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 26px;
+  }
+  .auth-title{ font-size:21px; margin-bottom:6px; }
+  .auth-sub{ font-size:13px; color: var(--charcoal-soft); margin-bottom:24px; }
+  .auth-field{ margin-bottom:14px; }
+  .auth-field label{
+    display:block; font-size:11.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.04em; color: var(--charcoal-soft); margin-bottom:6px;
+  }
+  .auth-field input{
+    width:100%;
+    padding: 11px 13px;
+    border-radius: var(--radius-s);
+    border: 1.5px solid var(--line);
+    background: var(--white);
+    font-family:'Inter', sans-serif;
+    font-size:14px;
+    color: var(--charcoal);
+  }
+  .auth-field input:focus{
+    outline:none; border-color: var(--brass); box-shadow: 0 0 0 3px rgba(184,147,74,0.15);
+  }
+  .auth-submit{ width:100%; justify-content:center; margin-top:6px; }
+  .auth-switch{
+    text-align:center; margin-top:18px; font-size:13px; color: var(--charcoal-soft);
+  }
+  .auth-switch button{
+    background:none; border:none; color: var(--brass); font-weight:700; font-size:13px;
+    text-decoration: underline;
+  }
+  .auth-error{
+    background: var(--coral-dim); color:#8A3F2F;
+    padding: 10px 13px; border-radius: var(--radius-s);
+    font-size:12.5px; margin-bottom:14px; display:none;
+  }
+  .auth-error.show{ display:block; }
+  .auth-loading{ display:none; align-items:center; gap:8px; justify-content:center; font-size:13px; color: var(--charcoal-soft); margin-top:14px; }
+  .auth-loading.show{ display:flex; }
+  .auth-loading .spinner{
+    width:14px;height:14px; border-radius:50%;
+    border: 2px solid var(--line); border-top-color: var(--brass);
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* ---------- Add child modal ---------- */
+  .child-modal-panel{ max-width: 460px; }
+  .consent-box{
+    display:flex; align-items:flex-start; gap:10px;
+    background: var(--parchment-dim);
+    border-radius: var(--radius-s);
+    padding: 12px 14px;
+    margin-top: 6px;
+    font-size:12.5px; color: var(--charcoal-soft); line-height:1.5;
+  }
+  .consent-box input[type="checkbox"]{ margin-top:2px; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- Supabase client library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- ========== AUTH SCREEN ========== -->
+<div class="auth-shell" id="authShell" style="display:none;">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="brand-mark" style="width:34px;height:34px;border-radius:8px;background:linear-gradient(155deg,var(--brass-light),var(--brass));display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;color:var(--ink);font-size:16px;">M</div>
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink);line-height:1.1;">MyCertSG</div>
+      </div>
+    </div>
+
+    <div id="authSignInPanel">
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-sub">Sign in to your family's account.</p>
+      <div class="auth-error" id="signInError"></div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="signInEmail" placeholder="you@email.com">
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="signInPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-brass auth-submit" onclick="handleSignIn()">Sign in</button>
+      <div class="auth-loading" id="signInLoading"><div class="spinner"></div> Signing in…</div>
+      <div class="auth-switch">New here? <button onclick="showSignUpPanel()">Create an account</button></div>
+    </div>
+
+    <div id="authSignUpPanel" style="display:none;">
+      <h2 class="auth-title">Create your account</h2>
+      <p class="auth-sub">This creates your family's account. You can add your children after signing in.</p>
+      <div class="auth-error" id="signUpError"></div>
+      <div class="auth-field">
+        <label>Your name</label>
+        <input type="text" id="signUpName" placeholder="e.g. Mrs Lim">
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="signUpEmail" placeholder="you@email.com">
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="signUpPassword" placeholder="At least 8 characters">
+      </div>
+      <button class="btn btn-brass auth-submit" onclick="handleSignUp()">Create account</button>
+      <div class="auth-loading" id="signUpLoading"><div class="spinner"></div> Creating your account…</div>
+      <div class="auth-switch">Already have an account? <button onclick="showSignInPanel()">Sign in</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="mainApp" style="display:flex;">
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <div class="brand-name">MyCertSG</div>
+        <div class="brand-sub">Every achievement, kept</div>
+      </div>
+    </div>
+
+    <div class="role-switch">
+      <button class="active" id="roleParentBtn" onclick="setRole('parent')">Parent view</button>
+      <button id="roleChildBtn" onclick="setRole('child')">Student view</button>
+    </div>
+
+    <div id="childSwitcherWrap">
+      <div class="nav-group-label" style="margin-top:0;">Children</div>
+      <div id="childListContainer">
+        <div style="font-size:12px; color: rgba(250,246,237,0.5); padding: 8px 10px;">Loading…</div>
+      </div>
+      <button class="child-pill" style="background:transparent; border:1px dashed rgba(250,246,237,0.3); justify-content:center; margin-top:4px;" onclick="openAddChildModal()">
+        <span style="font-size:13px; font-weight:600; color: rgba(250,246,237,0.75);">+ Add a child</span>
+      </button>
+    </div>
+
+    <div class="nav-group-label">Workspace</div>
+    <button class="nav-item active" data-view="dashboard" onclick="setView('dashboard')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" data-view="capture" onclick="setView('capture')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/><circle cx="12" cy="12" r="3.2"/></svg>
+      Capture cert
+    </button>
+    <button class="nav-item" data-view="timeline" onclick="setView('timeline')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v16M4 6h4M4 12h6M4 18h4"/><circle cx="16" cy="8" r="2"/><circle cx="16" cy="16" r="2"/></svg>
+      Timeline
+    </button>
+
+    <div class="nav-group-label">AI tools</div>
+    <button class="nav-item" data-view="aitools" onclick="setView('aitools')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z"/><path d="M19 15l.8 2.1L22 18l-2.2.9L19 21l-.8-2.1L16 18l2.2-.9L19 15z"/></svg>
+      AI Tools Hub
+    </button>
+    <button class="nav-item" data-view="linkedin" id="linkedinNav" onclick="setView('linkedin')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-3.2c0-1.2.9-1.8 1.9-1.8 1 0 1.6.7 1.6 1.9V16"/></svg>
+      LinkedIn tools
+    </button>
+
+    <div class="sidebar-footer">
+      <button class="child-pill profile-trigger" style="background:transparent;border:none;padding:8px 6px;width:100%;cursor:pointer;" onclick="setView('profile')">
+        <div class="child-avatar" id="footerAvatar" style="background:var(--brass);">DL</div>
+        <div style="text-align:left;">
+          <div class="child-pill-name" id="footerName" style="font-size:12.5px;">Mrs Lim</div>
+          <div class="child-pill-stage" id="footerSub">Signed in · Edit profile</div>
+        </div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="main">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="view active" id="view-dashboard">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Family dashboard</div>
+          <h1 class="page-title" id="dashTitle">Ethan's collection</h1>
+          <p class="page-desc" id="dashDesc">Every certificate, trophy, and award, organised as it happens. Never dug up from a drawer again.</p>
+        </div>
+        <button class="btn btn-brass" onclick="setView('capture')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+          Add certificate
+        </button>
+      </div>
+
+      <div class="stat-row">
+        <div class="card stat-card">
+          <div class="stat-num" id="statCerts">6</div>
+          <div class="stat-label">Certificates saved</div>
+        </div>
+        <div class="card stat-card accent-brass">
+          <div class="stat-num" id="statCategories">5</div>
+          <div class="stat-label">Categories covered</div>
+        </div>
+        <div class="card stat-card accent-sage">
+          <div class="stat-num" id="statYears">2020 to 2026</div>
+          <div class="stat-label">Years spanned</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-num" id="statLatest">Mar 2026</div>
+          <div class="stat-label">Last added</div>
+        </div>
+      </div>
+
+      <div class="section-label">Recently added</div>
+      <div class="cert-grid" id="dashGrid"></div>
+    </section>
+
+    <!-- ===== CAPTURE ===== -->
+    <section class="view" id="view-capture">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Capture engine</div>
+          <h1 class="page-title">Add a certificate</h1>
+          <p class="page-desc">Snap a photo. We'll pull out the details, and you always get the final say before it's saved.</p>
+        </div>
+      </div>
+
+      <div class="capture-shell">
+        <div class="dropzone" id="dropzone" onclick="simulateScan()">
+          <div class="dropzone-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M20 8V6a2 2 0 0 0-2-2h-2M20 16v2a2 2 0 0 1-2 2h-2"/><circle cx="12" cy="12" r="3.2"/></svg>
+          </div>
+          <h3>Take a photo or upload a scan</h3>
+          <p>Click to simulate. Drag & drop and camera capture work the same way in the full app</p>
+        </div>
+
+        <div class="scan-progress" id="scanProgress">
+          <div class="scan-bar-track"><div class="scan-bar-fill" id="scanBarFill"></div></div>
+          <div class="scan-label"><div class="spinner"></div> Reading certificate details…</div>
+        </div>
+
+        <div class="review-panel" id="reviewPanel">
+          <div class="card" style="padding:24px;">
+            <div class="review-head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Details found, please check before saving</span>
+            </div>
+
+            <div class="field-row">
+              <label>Event / certificate name</label>
+              <input type="text" value="National Science Challenge Regional Finals">
+            </div>
+            <div class="field-grid">
+              <div class="field-row">
+                <label>Category</label>
+                <select>
+                  <option>Academic</option>
+                  <option>Sports</option>
+                  <option>Arts</option>
+                  <option>Leadership</option>
+                  <option>Community Service</option>
+                </select>
+              </div>
+              <div class="field-row">
+                <label>Award / level</label>
+                <input type="text" value="1st Runner-Up">
+              </div>
+            </div>
+            <div class="field-grid">
+              <div class="field-row">
+                <label>Date</label>
+                <input type="text" value="14 March 2026">
+              </div>
+              <div class="field-row">
+                <label>Issuing organisation</label>
+                <input type="text" value="Science Centre Singapore">
+              </div>
+            </div>
+
+            <div class="review-actions">
+              <button class="btn btn-brass" onclick="saveCert()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>
+                Looks right, save it
+              </button>
+              <button class="btn btn-ghost" onclick="resetCapture()">Discard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TIMELINE ===== -->
+    <section class="view" id="view-timeline">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">The ledger</div>
+          <h1 class="page-title" id="timelineTitle">Ethan's timeline</h1>
+          <p class="page-desc">Every year, side by side, so it's easy to see where things are thriving, and where it's gone quiet.</p>
+        </div>
+      </div>
+
+      <div class="timeline-filters">
+        <button class="filter-chip active" data-cat="all" onclick="filterTimeline('all', this)">All categories</button>
+        <button class="filter-chip" data-cat="academic" onclick="filterTimeline('academic', this)"><span class="dot" style="background:#7C93C9"></span>Academic</button>
+        <button class="filter-chip" data-cat="sports" onclick="filterTimeline('sports', this)"><span class="dot" style="background:var(--sage)"></span>Sports</button>
+        <button class="filter-chip" data-cat="arts" onclick="filterTimeline('arts', this)"><span class="dot" style="background:#B96F92"></span>Arts</button>
+        <button class="filter-chip" data-cat="leadership" onclick="filterTimeline('leadership', this)"><span class="dot" style="background:var(--brass)"></span>Leadership</button>
+        <button class="filter-chip" data-cat="community" onclick="filterTimeline('community', this)"><span class="dot" style="background:var(--coral)"></span>Community</button>
+      </div>
+
+      <div class="gap-callout" id="gapCallout">
+        <div class="gap-callout-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        </div>
+        <div>
+          <div class="gap-callout-title">Worth a look</div>
+          <div class="gap-callout-text" id="gapCalloutText"></div>
+        </div>
+      </div>
+
+      <div class="ledger" id="ledgerContainer">
+      </div>
+
+      <div class="ledger-empty" id="ledgerEmpty" style="display:none;">
+        <p>Nothing saved in this category yet.</p>
+      </div>
+    </section>
+
+    <!-- ===== AI TOOLS HUB ===== -->
+    <section class="view" id="view-aitools">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">AI tools hub</div>
+          <h1 class="page-title">Turn the timeline into the document you need</h1>
+          <p class="page-desc">Every draft here pulls straight from Ethan's saved certificates. Nothing invented, always yours to edit before it goes anywhere.</p>
+        </div>
+      </div>
+
+      <div class="tool-tabs">
+        <button class="tool-tab active" data-tool="scholarship" onclick="setTool('scholarship')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+          Scholarship Finder
+        </button>
+        <button class="tool-tab" data-tool="resume" onclick="setTool('resume')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h9l5 5v15H6z"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
+          Resume Builder
+        </button>
+        <button class="tool-tab" data-tool="cover" onclick="setTool('cover')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Cover Letter
+        </button>
+        <button class="tool-tab" data-tool="chat" onclick="setTool('chat')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Ask about my portfolio
+        </button>
+      </div>
+
+      <!-- Scholarship Finder -->
+      <div class="tool-panel active" id="tool-scholarship">
+        <div class="tool-layout">
+          <div class="card tool-form">
+            <h3>Find matching scholarships</h3>
+            <div class="sub">Matched by rule, explained by AI, not the other way round.</div>
+            <div class="field-row">
+              <label>Stage</label>
+              <select><option>Secondary 3</option><option>JC1</option><option>JC2</option></select>
+            </div>
+            <div class="field-row">
+              <label>Focus area</label>
+              <select><option>All categories</option><option>Academic</option><option>Sports</option><option>Arts</option></select>
+            </div>
+            <button class="btn btn-brass" style="width:100%; justify-content:center;" onclick="runTool('scholarship')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z"/></svg>
+              Find matches
+            </button>
+          </div>
+          <div class="card result-panel">
+            <div class="result-empty" id="empty-scholarship">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10L12 5 2 10l10 5 10-5z"/></svg>
+              <p>Matches will appear here, with a plain-language reason for each one.</p>
+            </div>
+            <div class="result-loading" id="loading-scholarship"><div class="pulse-ring"></div><span>Checking eligibility criteria…</span></div>
+            <div class="result-content" id="result-scholarship">
+              <div class="match-item">
+                <div><div class="match-name">SP PSC Foundation Scholarship</div><div class="match-why">Strong fit for STEM achievement + a demonstrated sports commitment</div></div>
+                <span class="match-score">86% match</span>
+              </div>
+              <div class="match-item">
+                <div><div class="match-name">NUS High School Merit Award</div><div class="match-why">Regional science placing meets the academic distinction bar</div></div>
+                <span class="match-score">78% match</span>
+              </div>
+              <div class="match-item">
+                <div><div class="match-name">Community Leadership Bursary</div><div class="match-why">Volunteer hours qualify, but recent leadership entries are thin</div></div>
+                <span class="match-score">54% match</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resume Builder -->
+      <div class="tool-panel" id="tool-resume">
+        <div class="tool-layout">
+          <div class="card tool-form">
+            <h3>Build a resume</h3>
+            <div class="sub">Pulls achievements into resume-ready bullet points.</div>
+            <div class="field-row">
+              <label>Purpose</label>
+              <select><option>DSA application</option><option>Internship</option><option>General portfolio</option></select>
+            </div>
+            <div class="field-row">
+              <label>Tone</label>
+              <select><option>Formal</option><option>Concise</option></select>
+            </div>
+            <button class="btn btn-brass" style="width:100%; justify-content:center;" onclick="runTool('resume')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z"/></svg>
+              Generate resume
+            </button>
+          </div>
+          <div class="card result-panel">
+            <div class="result-empty" id="empty-resume">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2h9l5 5v15H6z"/></svg>
+              <p>Your generated resume section will show up here, ready to copy.</p>
+            </div>
+            <div class="result-loading" id="loading-resume"><div class="pulse-ring"></div><span>Drafting achievement bullets…</span></div>
+            <div class="result-content" id="result-resume">
+              <div class="result-block">
+                <div class="result-block-head"><h4>Achievements & Awards</h4><button class="copy-btn" onclick="copyBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+                <div class="result-text">Secured 1st Runner-Up at the National Science Challenge Regional Finals (2026), competing against 200+ entrants
+Earned Gold in the 100m Freestyle at the Inter-School Swimming Championship (2026)
+Achieved Certificate of Distinction, Singapore Youth Festival Choir (2025)
+Completed 40 hours of community service with Community Chest beneficiary visits (2024)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cover Letter -->
+      <div class="tool-panel" id="tool-cover">
+        <div class="tool-layout">
+          <div class="card tool-form">
+            <h3>Draft a cover letter</h3>
+            <div class="sub">A starting draft, always meant to be personalised further.</div>
+            <div class="field-row">
+              <label>Applying for</label>
+              <input type="text" placeholder="e.g. Raffles Institution DSA, Science">
+            </div>
+            <div class="field-row">
+              <label>Key strength to highlight</label>
+              <select><option>Academic achievement</option><option>Sports commitment</option><option>Community involvement</option></select>
+            </div>
+            <button class="btn btn-brass" style="width:100%; justify-content:center;" onclick="runTool('cover')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z"/></svg>
+              Draft letter
+            </button>
+          </div>
+          <div class="card result-panel">
+            <div class="result-empty" id="empty-cover">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+              <p>A draft cover letter will appear here, built around real achievements.</p>
+            </div>
+            <div class="result-loading" id="loading-cover"><div class="pulse-ring"></div><span>Writing a first draft…</span></div>
+            <div class="result-content" id="result-cover">
+              <div class="result-block">
+                <div class="result-block-head"><h4>Draft letter</h4><button class="copy-btn" onclick="copyBlock(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button></div>
+                <div class="result-text">I am writing to express my interest in the Direct School Admission programme for Science. Over the past two years, I placed 1st Runner-Up at the National Science Challenge Regional Finals and have maintained a consistent record of competitive swimming, earning Gold at the Inter-School Championship this year.
+
+Beyond competition, I have contributed 40 hours to community service and previously served as Class Chairperson, which shaped how I balance commitment across different areas of school life. I would welcome the opportunity to bring this same dedication to your programme.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Chatbot -->
+      <div class="tool-panel" id="tool-chat">
+        <div class="card chat-shell">
+          <div class="chat-header">
+            <div class="chat-header-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z"/></svg>
+            </div>
+            <div>
+              <div class="chat-header-title">Ask about your portfolio</div>
+              <div class="chat-header-sub">Answers only from what's actually saved, nothing made up</div>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg bot">
+              <div class="chat-bubble">Hi, I can see everything saved in your portfolio. Ask me things like "what should I highlight for a Science DSA" or "am I missing anything in leadership".</div>
+            </div>
+          </div>
+
+          <div class="chat-suggestions" id="chatSuggestions">
+            <button class="chat-chip" onclick="sendChatSuggestion(this)">What are my strongest achievements?</button>
+            <button class="chat-chip" onclick="sendChatSuggestion(this)">Any gaps I should fix before applying?</button>
+            <button class="chat-chip" onclick="sendChatSuggestion(this)">Summarise my sports achievements</button>
+          </div>
+
+          <div class="chat-input-row">
+            <input type="text" id="chatInput" placeholder="Ask a question about your portfolio" onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button class="btn btn-brass btn-sm" onclick="sendChatMessage()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== LINKEDIN ===== -->
+    <section class="view" id="view-linkedin">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">LinkedIn tools</div>
+          <h1 class="page-title">Bring achievements to LinkedIn</h1>
+          <p class="page-desc">Available from JC and beyond. Younger profiles don't see this, by design.</p>
+        </div>
+      </div>
+
+      <div class="li-card card">
+        <div class="li-icon"><svg viewBox="0 0 24 24"><path d="M20.4 20.4h-3.5v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.6H9.5V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.3-1.8 3.6 0 4.2 2.3 4.2 5.4v6.2zM5.7 7.4a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM7.5 20.4h-3.6V9h3.6v11.4z"/></svg></div>
+        <div class="li-body">
+          <h4>Sign in with LinkedIn</h4>
+          <p>Verify your professional identity and speed up onboarding using your existing LinkedIn account.</p>
+          <button class="btn btn-ghost btn-sm" onclick="openLinkedIn('https://www.linkedin.com/login', 'Opening LinkedIn sign-in')">Connect account</button>
+        </div>
+      </div>
+
+      <div class="li-card card">
+        <div class="li-icon"><svg viewBox="0 0 24 24"><path d="M20.4 20.4h-3.5v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.6H9.5V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.3-1.8 3.6 0 4.2 2.3 4.2 5.4v6.2zM5.7 7.4a2 2 0 1 1 0-4 2 2 0 0 1 0 4zM7.5 20.4h-3.6V9h3.6v11.4z"/></svg></div>
+        <div class="li-body">
+          <h4>Share your portfolio</h4>
+          <p>Post your generated portfolio summary as a LinkedIn feed update or add it to your Featured section.</p>
+          <button class="btn btn-ghost btn-sm" onclick="openLinkedIn('https://www.linkedin.com/feed/?shareActive=true', 'Opening LinkedIn share')">Share to feed</button>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:26px;">Add certificates to your profile</div>
+
+      <div class="card" style="padding:22px;">
+        <div class="cert-pick-row">
+          <div><div class="name">National Science Challenge Regional Finals</div><div class="issuer">Science Centre Singapore · 2026</div></div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="copyToClipboard(this, 'National Science Challenge Regional Finals, Science Centre Singapore, March 2026, 1st Runner-Up')">Copy details</button>
+            <button class="btn btn-brass btn-sm" onclick="addToLinkedInProfile(this, 'National Science Challenge Regional Finals, Science Centre Singapore, March 2026, 1st Runner-Up')">Add to Profile</button>
+          </div>
+        </div>
+        <div class="cert-pick-row">
+          <div><div class="name">Inter-School Swimming Championship</div><div class="issuer">SSSC · 2026</div></div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="copyToClipboard(this, 'Inter-School Swimming Championship, SSSC, January 2026, Gold 100m Freestyle')">Copy details</button>
+            <button class="btn btn-brass btn-sm" onclick="addToLinkedInProfile(this, 'Inter-School Swimming Championship, SSSC, January 2026, Gold 100m Freestyle')">Add to Profile</button>
+          </div>
+        </div>
+
+        <div class="li-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16v-4M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg>
+          LinkedIn's Add to Profile form no longer auto fills details. Copy the details first, then paste them into the form that opens.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROFILE ===== -->
+    <section class="view" id="view-profile">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Account</div>
+          <h1 class="page-title">Your profile</h1>
+          <p class="page-desc">Update your details, and tell the AI tools what you're working toward, so every draft is aimed at something real.</p>
+        </div>
+      </div>
+
+      <div class="profile-layout">
+        <div class="card profile-card-main">
+          <div class="section-label">Basic details</div>
+
+          <div class="pfp-row">
+            <div class="pfp-preview" id="pfpPreview">DL</div>
+            <div>
+              <button class="btn btn-ghost btn-sm" onclick="simulatePfpChange()">Change photo</button>
+              <div class="pfp-hint">JPG or PNG, square works best</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <label>Name</label>
+            <input type="text" id="profileNameInput" value="Mrs Lim">
+          </div>
+          <div class="field-row">
+            <label>Email</label>
+            <input type="text" value="d.lim@email.com">
+          </div>
+
+          <div class="section-label" style="margin-top:26px;">Your portfolio goal</div>
+          <div class="field-row">
+            <label>What are you working toward?</label>
+            <textarea rows="4" id="goalTextarea" placeholder="e.g. Hoping to get into a Science-focused DSA program, and eventually a scholarship that values both academics and community involvement.">Hoping to build a strong case for a Science DSA place at a top JC, and eventually a scholarship that recognises both academic results and consistent sports commitment.</textarea>
+          </div>
+          <div class="goal-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z"/></svg>
+            This quietly shapes how the AI tools phrase resumes, cover letters, and scholarship matches. It's never shown to anyone else.
+          </div>
+
+          <button class="btn btn-brass" style="margin-top:22px;" onclick="saveProfile()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>
+            Save changes
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastMsg">Saved</span>
+</div>
+
+<div class="modal-overlay" id="certModalOverlay" onclick="closeCertDetailOnOverlay(event)">
+  <div class="modal-panel">
+    <button class="modal-close" onclick="closeCertDetail()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-thumb" id="modalThumb"></div>
+    <span class="cert-cat-badge modal-badge" id="modalCatBadge">Category</span>
+    <h2 class="modal-title" id="modalTitle">Certificate title</h2>
+    <div class="modal-meta-row">
+      <div class="modal-meta-item">
+        <div class="modal-meta-label">Issued by</div>
+        <div class="modal-meta-value" id="modalIssuer">Issuer</div>
+      </div>
+      <div class="modal-meta-item">
+        <div class="modal-meta-label">Date</div>
+        <div class="modal-meta-value" id="modalDate">Date</div>
+      </div>
+      <div class="modal-meta-item">
+        <div class="modal-meta-label">Stage</div>
+        <div class="modal-meta-value" id="modalStage">Stage</div>
+      </div>
+    </div>
+    <div class="modal-award-row">
+      <div class="modal-meta-label">Award</div>
+      <div class="modal-award-value" id="modalAward">Award</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showToast('This would open the saved certificate image')">View original photo</button>
+      <button class="btn btn-ghost btn-sm" onclick="showToast('This would open the edit form')">Edit details</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addChildOverlay" onclick="closeAddChildOnOverlay(event)">
+  <div class="modal-panel child-modal-panel">
+    <button class="modal-close" onclick="closeAddChildModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <h2 class="modal-title" style="margin-bottom:6px;">Add a child</h2>
+    <p style="font-size:13px; color:var(--charcoal-soft); margin:0 0 20px 0;">This creates their profile. You can start capturing certificates for them right after.</p>
+
+    <div class="auth-error" id="addChildError"></div>
+
+    <div class="field-row">
+      <label>Child's name</label>
+      <input type="text" id="childNameInput" placeholder="e.g. Ethan Lim">
+    </div>
+    <div class="field-grid">
+      <div class="field-row">
+        <label>Current stage</label>
+        <select id="childStageInput">
+          <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
+          <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
+          <option>Secondary 1</option><option>Secondary 2</option><option>Secondary 3</option>
+          <option>Secondary 4</option><option>Secondary 5</option>
+          <option>JC1</option><option>JC2</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <label>Date of birth</label>
+        <input type="date" id="childDobInput">
+      </div>
+    </div>
+
+    <div class="consent-box" id="consentBox" style="display:none;">
+      <input type="checkbox" id="consentCheckbox">
+      <label for="consentCheckbox">I confirm I am this child's parent or legal guardian, and I consent to storing their personal data and certificate records in MyCertSG, in line with PDPA requirements for children under 13.</label>
+    </div>
+
+    <button class="btn btn-brass" style="width:100%; justify-content:center; margin-top:20px;" onclick="handleAddChild()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+      Add child
+    </button>
+    <div class="auth-loading" id="addChildLoading"><div class="spinner"></div> Saving…</div>
+  </div>
+</div>
+
+<script>
+  // ---------- Supabase client ----------
+  const SUPABASE_URL = 'https://zhysddvmirmvawuptpsg.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_gxCt1wl5rPJX5XCSAeyTYQ_ziDnUTE7';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---------- Auth panel switching ----------
+  function showSignUpPanel(){
+    document.getElementById('authSignInPanel').style.display = 'none';
+    document.getElementById('authSignUpPanel').style.display = 'block';
+  }
+  function showSignInPanel(){
+    document.getElementById('authSignUpPanel').style.display = 'none';
+    document.getElementById('authSignInPanel').style.display = 'block';
+  }
+  function showAuthError(panelId, message){
+    const el = document.getElementById(panelId);
+    el.textContent = message;
+    el.classList.add('show');
+  }
+  function clearAuthError(panelId){
+    document.getElementById(panelId).classList.remove('show');
+  }
+
+  // ---------- Sign up: creates the auth user, then a family + first parent link row ----------
+  async function handleSignUp(){
+    clearAuthError('signUpError');
+    const name = document.getElementById('signUpName').value.trim();
+    const email = document.getElementById('signUpEmail').value.trim();
+    const password = document.getElementById('signUpPassword').value;
+
+    if(!name || !email || !password){
+      showAuthError('signUpError', 'Please fill in all fields.');
+      return;
+    }
+    if(password.length < 8){
+      showAuthError('signUpError', 'Password must be at least 8 characters.');
+      return;
+    }
+
+    document.getElementById('signUpLoading').classList.add('show');
+
+    const { data: signUpData, error: signUpErr } = await sb.auth.signUp({
+      email, password,
+      options: { data: { full_name: name } }
+    });
+
+    if(signUpErr){
+      document.getElementById('signUpLoading').classList.remove('show');
+      showAuthError('signUpError', signUpErr.message);
+      return;
+    }
+
+    // If email confirmation is required, there's no session yet.
+    // Supabase returns a user but session will be null until they confirm.
+    if(!signUpData.session){
+      document.getElementById('signUpLoading').classList.remove('show');
+      showAuthError('signUpError', 'Account created. Please check your email to confirm before signing in.');
+      return;
+    }
+
+    // Create the family + link this parent to it, via the server side
+    // function, since RLS correctly blocks direct client inserts into
+    // families. The function only ever links auth.uid() to a new family,
+    // so this call can't create a family for anyone but the caller.
+    const { error: familyErr } = await sb.rpc('create_family_for_new_parent');
+
+    document.getElementById('signUpLoading').classList.remove('show');
+
+    if(familyErr){
+      showAuthError('signUpError', 'Account created, but family setup failed: ' + familyErr.message);
+      return;
+    }
+
+    // Signed up and family created, now show the main app
+    enterApp();
+  }
+
+  // ---------- Sign in: existing user, existing session ----------
+  async function handleSignIn(){
+    clearAuthError('signInError');
+    const email = document.getElementById('signInEmail').value.trim();
+    const password = document.getElementById('signInPassword').value;
+
+    if(!email || !password){
+      showAuthError('signInError', 'Please enter your email and password.');
+      return;
+    }
+
+    document.getElementById('signInLoading').classList.add('show');
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    document.getElementById('signInLoading').classList.remove('show');
+
+    if(error){
+      showAuthError('signInError', error.message);
+      return;
+    }
+
+    enterApp();
+  }
+
+  // ---------- DEMO MODE: no login, no Supabase calls ----------
+  // The real app checks for an existing session and loads children from
+  // Supabase here. This demo file skips both so it works standalone,
+  // with no account needed and no risk of touching real data.
+  // checkExistingSession() intentionally not called.
+
+  // ---------- Fake children for demo purposes only ----------
+  let realChildren = [
+    { id: 'ethan', name: 'Ethan Lim', stage: 'Secondary 3' },
+    { id: 'sarah', name: 'Sarah Tan', stage: 'Primary 6' }
+  ];
+  let activeRealChildId = 'ethan';
+
+  function initialsOf(name){
+    return name.trim().split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+  }
+
+  function renderChildList(){
+    const container = document.getElementById('childListContainer');
+    container.innerHTML = realChildren.map(c => `
+      <button class="child-pill child-select ${c.id === activeRealChildId ? 'active' : ''}" onclick="selectRealChild('${c.id}')">
+        <div class="child-avatar" style="background:var(--sage);">${initialsOf(c.name)}</div>
+        <div style="text-align:left;">
+          <div class="child-pill-name">${c.name}</div>
+          <div class="child-pill-stage">${c.stage}</div>
+        </div>
+      </button>
+    `).join('');
+  }
+  renderChildList();
+
+  function selectRealChild(childId){
+    activeRealChildId = childId;
+    renderChildList();
+    selectChild(childId); // drives the existing dashboard/timeline sample data
+  }
+
+  // ---------- Add child modal ----------
+  function openAddChildModal(){
+    document.getElementById('childNameInput').value = '';
+    document.getElementById('childDobInput').value = '';
+    document.getElementById('consentCheckbox').checked = false;
+    document.getElementById('consentBox').style.display = 'none';
+    clearAuthError('addChildError');
+    document.getElementById('addChildOverlay').classList.add('show');
+  }
+  function closeAddChildModal(){
+    document.getElementById('addChildOverlay').classList.remove('show');
+  }
+  function closeAddChildOnOverlay(e){
+    if(e.target.id === 'addChildOverlay') closeAddChildModal();
+  }
+
+  // Show the consent checkbox as soon as the entered DOB implies under 13,
+  // per the non negotiable that under-13 children need explicit consent
+  // captured before their data is stored.
+  document.addEventListener('DOMContentLoaded', () => {
+    const dobInput = document.getElementById('childDobInput');
+    if(dobInput){
+      dobInput.addEventListener('change', () => {
+        const consentBox = document.getElementById('consentBox');
+        if(!dobInput.value){ consentBox.style.display = 'none'; return; }
+        const dob = new Date(dobInput.value);
+        const age = (Date.now() - dob.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+        consentBox.style.display = age < 13 ? 'flex' : 'none';
+      });
+    }
+  });
+
+  async function handleAddChild(){
+    // Demo mode: adds a child to the local sample list only, nothing is
+    // sent to Supabase, so this file is safe to share standalone.
+    clearAuthError('addChildError');
+    const name = document.getElementById('childNameInput').value.trim();
+    const stage = document.getElementById('childStageInput').value;
+    const consentBoxVisible = document.getElementById('consentBox').style.display !== 'none';
+    const consentChecked = document.getElementById('consentCheckbox').checked;
+
+    if(!name){
+      showAuthError('addChildError', "Please enter the child's name.");
+      return;
+    }
+    if(consentBoxVisible && !consentChecked){
+      showAuthError('addChildError', 'Parental consent is required for children under 13 before their profile can be created.');
+      return;
+    }
+
+    const newId = 'demo-' + Date.now();
+    realChildren.push({ id: newId, name, stage });
+    children[newId] = {
+      name, initials: initialsOf(name), stage, focus: 'General', avatarColor: 'var(--sage)',
+      goal: '', dashDesc: 'Every certificate, trophy, and award, organised as it happens.',
+      gapCount: 0, gap: null
+    };
+    certData[newId] = [];
+
+    closeAddChildModal();
+    showToast(name + ' added');
+    renderChildList();
+  }
+
+  // ---------- Cert data, per child ----------
+  const certData = {
+    ethan: [
+      {title:"National Science Challenge Regional Finals", org:"Science Centre Singapore", date:"March 2026", year:2026, award:"1st Runner-Up", cat:"academic", icon:"academic", stage:"Secondary 3"},
+      {title:"Inter-School Swimming Championship", org:"SSSC", date:"January 2026", year:2026, award:"Gold, 100m Freestyle", cat:"sports", icon:"sports", stage:"Secondary 3"},
+      {title:"Singapore Youth Festival Choir", org:"MOE", date:"July 2025", year:2025, award:"Certificate of Distinction", cat:"arts", icon:"arts", stage:"Secondary 2"},
+      {title:"Class Chairperson", org:"Raffles Institution", date:"2024", year:2024, award:"Appointed role", cat:"leadership", icon:"leadership", stage:"Secondary 1"},
+      {title:"Community Chest Beneficiary Visits", org:"NVPC", date:"April 2024", year:2024, award:"40 volunteer hours", cat:"community", icon:"community", stage:"Secondary 1"},
+      {title:"NAPFA Gold Award", org:"MOE", date:"2021", year:2021, award:"Gold", cat:"academic", icon:"academic", stage:"Primary 6"},
+      {title:"National Swimming Age-Group Championships", org:"SSA", date:"2020", year:2020, award:"Bronze, 50m Breaststroke", cat:"sports", icon:"sports", stage:"Primary 5"},
+    ],
+    sarah: [
+      {title:"Junior Art Competition, Open Category", org:"NAFA Youth", date:"August 2026", year:2026, award:"2nd Place", cat:"arts", icon:"arts", stage:"Primary 6"},
+      {title:"School Choir Recital", org:"Anglo-Chinese School (Junior)", date:"March 2026", year:2026, award:"Featured Soloist", cat:"arts", icon:"arts", stage:"Primary 6"},
+      {title:"Watercolour Workshop Showcase", org:"Community Arts Centre", date:"October 2024", year:2024, award:"Selected for exhibition", cat:"arts", icon:"arts", stage:"Primary 4"},
+      {title:"NAPFA Silver Award", org:"MOE", date:"2023", year:2023, award:"Silver", cat:"academic", icon:"academic", stage:"Primary 3"},
+    ]
+  };
+
+  const icons = {
+    academic: '<svg viewBox="0 0 24 24" fill="none" stroke="#4A5F94" stroke-width="1.6"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>',
+    sports: '<svg viewBox="0 0 24 24" fill="none" stroke="#4C6B50" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a12 12 0 0 1 0 18 12 12 0 0 1 0-18z"/></svg>',
+    arts: '<svg viewBox="0 0 24 24" fill="none" stroke="#8B4E6C" stroke-width="1.6"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2a10 10 0 1 0 0 20 2.5 2.5 0 0 0 0-5h-1.5a1.5 1.5 0 0 1 0-3H12a2.5 2.5 0 0 0 0-5"/></svg>',
+    leadership: '<svg viewBox="0 0 24 24" fill="none" stroke="#8A6B2E" stroke-width="1.6"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg>',
+    community: '<svg viewBox="0 0 24 24" fill="none" stroke="#9C4C3B" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>'
+  };
+
+  const catDotClass = { academic:"cat-dot-academic", sports:"cat-dot-sports", arts:"cat-dot-arts", leadership:"cat-dot-leadership", community:"cat-dot-community" };
+
+  function formatMonthYear(dateStr){
+    // dateStr can be "March 2026" or just "2026", both handled gracefully
+    const parts = dateStr.split(' ');
+    if(parts.length === 2){
+      return parts[0].slice(0,3) + ' ' + parts[1];
+    }
+    return dateStr;
+  }
+
+  let currentTimelineFilter = 'all';
+
+  function renderDashboardGrid(childId){
+    const grid = document.getElementById('dashGrid');
+    grid.innerHTML = '';
+    const sorted = [...certData[childId]].sort((a,b) => b.year - a.year);
+    const list = sorted.slice(0, 6);
+    list.forEach((c, i) => {
+      const el = document.createElement('div');
+      el.className = 'card cert-card';
+      el.style.animationDelay = (i * 0.05) + 's';
+      el.onclick = () => openCertDetail(childId, c);
+      el.innerHTML = `
+        <div class="cert-thumb cat-${c.cat}">
+          <span class="cert-cat-badge">${c.cat}</span>
+          ${icons[c.icon]}
+        </div>
+        <div class="cert-title">${c.title}</div>
+        <div class="cert-meta">${c.org} · ${c.date}</div>
+        <span class="cert-award">${c.award}</span>
+      `;
+      grid.appendChild(el);
+    });
+
+    // Update stat cards to match this child's real data
+    const certs = certData[childId];
+    const cats = new Set(certs.map(c => c.cat));
+    const years = certs.map(c => c.year);
+    document.getElementById('statCerts').textContent = certs.length;
+    document.getElementById('statCategories').textContent = cats.size;
+    document.getElementById('statYears').textContent = Math.min(...years) + " to " + Math.max(...years);
+    document.getElementById('statLatest').textContent = formatMonthYear(sorted[0].date);
+  }
+
+  function renderTimeline(childId){
+    // Reset filter to "all" whenever we switch child, so it never looks stuck on an empty view
+    currentTimelineFilter = 'all';
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    const allChip = document.querySelector('.filter-chip[data-cat="all"]');
+    if(allChip) allChip.classList.add('active');
+
+    // Gap callout, shown once, separate from the year by year flow
+    const gap = children[childId].gap;
+    const gapCallout = document.getElementById('gapCallout');
+    if(gap){
+      gapCallout.style.display = 'flex';
+      document.getElementById('gapCalloutText').textContent = gap.text;
+    } else {
+      gapCallout.style.display = 'none';
+    }
+
+    drawTimelineEntries(childId);
+  }
+
+  function drawTimelineEntries(childId){
+    const container = document.getElementById('ledgerContainer');
+    const emptyState = document.getElementById('ledgerEmpty');
+    container.innerHTML = '';
+
+    let certs = [...certData[childId]].sort((a,b) => b.year - a.year);
+    if(currentTimelineFilter !== 'all'){
+      certs = certs.filter(c => c.cat === currentTimelineFilter);
+    }
+
+    if(certs.length === 0){
+      container.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    container.style.display = 'block';
+    emptyState.style.display = 'none';
+
+    // Group by year
+    const byYear = {};
+    certs.forEach(c => {
+      if(!byYear[c.year]) byYear[c.year] = [];
+      byYear[c.year].push(c);
+    });
+    const years = Object.keys(byYear).sort((a,b) => b - a);
+
+    years.forEach((year) => {
+      const entries = byYear[year];
+      const block = document.createElement('div');
+      block.className = 'year-block';
+      block.innerHTML = `
+        <div class="year-marker">${String(year).slice(2)}</div>
+        <div class="year-heading"><h3>${year}</h3><span class="year-stage">${entries[0].stage}</span></div>
+        <div class="timeline-entries">
+          ${entries.map((c, i) => `
+            <div class="t-entry" data-idx="${i}"><span class="t-cat-dot ${catDotClass[c.cat]}"></span>
+              <div><div class="t-entry-title">${c.title}</div><div class="t-entry-meta">${c.org} · ${c.date}</div></div>
+              <span class="t-entry-award">${c.award}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      // Wire up click handlers on each entry
+      block.querySelectorAll('.t-entry').forEach((el, i) => {
+        el.style.cursor = 'pointer';
+        el.onclick = () => openCertDetail(childId, entries[i]);
+      });
+      container.appendChild(block);
+    });
+  }
+
+  function filterTimeline(cat, btn){
+    currentTimelineFilter = cat;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    drawTimelineEntries(activeChild);
+  }
+
+  // ---------- View switching ----------
+  function setView(name){
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navBtn = document.querySelector(`.nav-item[data-view="${name}"]`);
+    if(navBtn) navBtn.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // ---------- Data model: children and role ----------
+  const children = {
+    ethan: {
+      name: "Ethan Lim",
+      initials: "EL",
+      stage: "Secondary 3",
+      focus: "Sports",
+      avatarColor: "var(--sage)",
+      goal: "Hoping to build a strong case for a Science DSA place at a top JC, and eventually a scholarship that recognises both academic results and consistent sports commitment.",
+      dashDesc: "Every certificate, trophy, and award, organised as it happens. Never dug up from a drawer again.",
+      gapCount: 1,
+      gap: { afterYear: 2025, text: "No leadership entries since 2024. Ethan held a CCA leadership role in Sec 1, worth checking if there's a Sec 2/3 role to add, or a real gap to address before DSA applications." }
+    },
+    sarah: {
+      name: "Sarah Tan",
+      initials: "ST",
+      stage: "Primary 6",
+      focus: "Arts",
+      avatarColor: "#B96F92",
+      goal: "Building a portfolio for an Arts Elective Programme application, focused on visual art and choir achievements.",
+      dashDesc: "Every piece, performance, and award, kept together in one place for when it's time to apply.",
+      gapCount: 1,
+      gap: { afterYear: 2024, text: "No entries recorded for 2025. Worth checking if anything from that year is still sitting in a folder somewhere, before applying for the Arts Elective Programme." }
+    }
+  };
+
+  let currentRole = 'parent';
+  let activeChild = 'ethan';
+
+  function selectChild(childId){
+    activeChild = childId;
+    applyActiveChild();
+    showToast('Viewing ' + children[childId].name + '\'s portfolio');
+  }
+
+  function applyActiveChild(){
+    const c = children[activeChild];
+    const parentName = "Mrs Lim";
+
+    // Dashboard heading reflects whichever child is active
+    document.getElementById('dashTitle').textContent = currentRole === 'child'
+      ? "My collection"
+      : c.name.split(' ')[0] + "'s collection";
+    document.getElementById('dashDesc').textContent = currentRole === 'child'
+      ? "Everything you've earned, in one place and ready whenever you need it."
+      : c.dashDesc;
+
+    // Timeline heading follows the same pattern
+    const timelineTitle = document.getElementById('timelineTitle');
+    if(timelineTitle){
+      timelineTitle.textContent = currentRole === 'child'
+        ? "My timeline"
+        : c.name.split(' ')[0] + "'s timeline";
+    }
+
+    // Re render data driven views for whichever child is now active
+    renderDashboardGrid(activeChild);
+    renderTimeline(activeChild);
+
+    // Bottom sidebar profile pill always reflects whoever is "in the driving seat"
+    if(currentRole === 'child'){
+      document.getElementById('footerAvatar').textContent = c.initials;
+      document.getElementById('footerAvatar').style.background = c.avatarColor;
+      document.getElementById('footerName').textContent = c.name;
+      document.getElementById('footerSub').textContent = c.stage + ' · Edit profile';
+    } else {
+      document.getElementById('footerAvatar').textContent = "DL";
+      document.getElementById('footerAvatar').style.background = "var(--brass)";
+      document.getElementById('footerName').textContent = parentName;
+      document.getElementById('footerSub').textContent = "Signed in · Edit profile";
+    }
+
+    // Profile page fields, prefilled with whoever is active
+    const profileName = currentRole === 'child' ? c.name : parentName;
+    const profileNameInput = document.getElementById('profileNameInput');
+    if(profileNameInput) profileNameInput.value = profileName;
+    const goalTextarea = document.getElementById('goalTextarea');
+    if(goalTextarea) goalTextarea.value = c.goal;
+    const pfpPreview = document.getElementById('pfpPreview');
+    if(pfpPreview){
+      pfpPreview.textContent = currentRole === 'child' ? c.initials : "DL";
+      pfpPreview.style.background = currentRole === 'child'
+        ? c.avatarColor
+        : "linear-gradient(155deg, var(--brass-light), var(--brass))";
+    }
+  }
+
+  // ---------- Role switching (parent vs child) ----------
+  function setRole(role){
+    currentRole = role;
+    document.getElementById('roleParentBtn').classList.toggle('active', role === 'parent');
+    document.getElementById('roleChildBtn').classList.toggle('active', role === 'child');
+    const childSwitcherWrap = document.getElementById('childSwitcherWrap');
+
+    // Student view only ever sees their own portfolio, so the multi child switcher disappears
+    childSwitcherWrap.style.display = (role === 'child') ? 'none' : 'block';
+
+    applyActiveChild();
+    showToast(role === 'child' ? "Switched to student view" : "Switched to parent view");
+  }
+
+  // ---------- Capture flow simulation ----------
+  function simulateScan(){
+    document.getElementById('dropzone').style.display = 'none';
+    const progress = document.getElementById('scanProgress');
+    progress.classList.add('active');
+    requestAnimationFrame(() => {
+      document.getElementById('scanBarFill').style.width = '100%';
+    });
+    setTimeout(() => {
+      progress.classList.remove('active');
+      document.getElementById('reviewPanel').classList.add('active');
+    }, 1900);
+  }
+  function resetCapture(){
+    document.getElementById('reviewPanel').classList.remove('active');
+    document.getElementById('scanBarFill').style.width = '0%';
+    document.getElementById('dropzone').style.display = 'block';
+  }
+  function saveCert(){
+    showToast('Certificate saved to timeline');
+    setTimeout(() => { resetCapture(); setView('dashboard'); }, 700);
+  }
+
+  // ---------- AI Tools tabs ----------
+  function setTool(name){
+    document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tool-tab[data-tool="${name}"]`).classList.add('active');
+    document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tool-' + name).classList.add('active');
+  }
+
+  function runTool(name){
+    const empty = document.getElementById('empty-' + name);
+    const loading = document.getElementById('loading-' + name);
+    const result = document.getElementById('result-' + name);
+    empty.style.display = 'none';
+    result.classList.remove('active');
+    loading.classList.add('active');
+    setTimeout(() => {
+      loading.classList.remove('active');
+      result.classList.add('active');
+    }, 1400);
+  }
+
+  // ---------- AI chatbot (simulated, would call an LLM API with the child's real data as context) ----------
+  function buildChatReply(question){
+    const c = children[activeChild];
+    const certs = certData[activeChild];
+    const q = question.toLowerCase();
+
+    const byCat = {};
+    certs.forEach(c2 => { (byCat[c2.cat] = byCat[c2.cat] || []).push(c2); });
+    const topCert = [...certs].sort((a,b) => b.year - a.year)[0];
+
+    if(q.includes('strong') || q.includes('best') || q.includes('highlight')){
+      return `Your strongest entries right now are "${topCert.title}" (${topCert.award}, ${topCert.date}), plus consistent results in ${Object.keys(byCat).sort((a,b) => byCat[b].length - byCat[a].length)[0]}. Those are the two I'd lead with for most applications.`;
+    }
+    if(q.includes('gap') || q.includes('missing') || q.includes('weak')){
+      return c.gap ? c.gap.text : `Nothing obvious stands out as a gap right now, coverage looks fairly even across ${Object.keys(byCat).join(', ')}.`;
+    }
+    if(q.includes('sport')){
+      const sportsCerts = byCat['sports'] || [];
+      return sportsCerts.length
+        ? `In sports, you've saved ${sportsCerts.length} ${sportsCerts.length === 1 ? 'entry' : 'entries'}: ${sportsCerts.map(x => `${x.title} (${x.date})`).join(', ')}.`
+        : `There's nothing saved under sports yet.`;
+    }
+    if(q.includes('art')){
+      const artsCerts = byCat['arts'] || [];
+      return artsCerts.length
+        ? `In arts, you've saved ${artsCerts.length} ${artsCerts.length === 1 ? 'entry' : 'entries'}: ${artsCerts.map(x => `${x.title} (${x.date})`).join(', ')}.`
+        : `There's nothing saved under arts yet.`;
+    }
+    if(q.includes('how many') || q.includes('total')){
+      return `You have ${certs.length} certificates saved, spanning ${Math.min(...certs.map(x=>x.year))} to ${Math.max(...certs.map(x=>x.year))}.`;
+    }
+    return `Based on what's saved so far (${certs.length} certificates across ${Object.keys(byCat).length} categories), I'd say the standout is "${topCert.title}". Ask me something more specific, like which category to focus on next, and I can dig into the details.`;
+  }
+
+  function appendChatMessage(text, sender){
+    const messages = document.getElementById('chatMessages');
+    const msg = document.createElement('div');
+    msg.className = 'chat-msg ' + sender;
+    msg.innerHTML = `<div class="chat-bubble">${text}</div>`;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function sendChatMessage(){
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if(!text) return;
+    appendChatMessage(text, 'user');
+    input.value = '';
+    document.getElementById('chatSuggestions').style.display = 'none';
+
+    const messages = document.getElementById('chatMessages');
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg bot';
+    typing.id = 'typingIndicator';
+    typing.innerHTML = `<div class="chat-typing"><span></span><span></span><span></span></div>`;
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    setTimeout(() => {
+      const t = document.getElementById('typingIndicator');
+      if(t) t.remove();
+      appendChatMessage(buildChatReply(text), 'bot');
+    }, 1100);
+  }
+
+  function sendChatSuggestion(btn){
+    document.getElementById('chatInput').value = btn.textContent;
+    sendChatMessage();
+  }
+
+  // ---------- Copy actions ----------
+  function copyBlock(btn){
+    const text = btn.closest('.result-block').querySelector('.result-text').innerText;
+    navigator.clipboard.writeText(text).catch(()=>{});
+    const original = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = original; }, 1600);
+  }
+  function copyToClipboard(btn, text){
+    navigator.clipboard.writeText(text).catch(()=>{});
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = original; }, 1400);
+    showToast('Details copied, paste into LinkedIn\'s form');
+  }
+
+  // ---------- Real LinkedIn links ----------
+  function openLinkedIn(url, msg){
+    window.open(url, '_blank', 'noopener');
+    if(msg) showToast(msg);
+  }
+  function addToLinkedInProfile(btn, text){
+    navigator.clipboard.writeText(text).catch(()=>{});
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.textContent = original; }, 1400);
+    // LinkedIn no longer accepts pre-filled certification data from third-party
+    // apps, so this opens the real Add Certification form and the details
+    // are already on the clipboard to paste in.
+    window.open('https://www.linkedin.com/in/me/edit/forms/certification/new/', '_blank', 'noopener');
+    showToast('Details copied, paste into the LinkedIn form that just opened');
+  }
+
+  // ---------- Toast ----------
+  // ---------- Profile page ----------
+  function simulatePfpChange(){
+    const preview = document.getElementById('pfpPreview');
+    preview.classList.remove('changed');
+    void preview.offsetWidth;
+    preview.classList.add('changed');
+    showToast('Photo updated');
+  }
+  function saveProfile(){
+    const newName = document.getElementById('profileNameInput').value.trim();
+    const newGoal = document.getElementById('goalTextarea').value.trim();
+
+    if(currentRole === 'child' && newName){
+      children[activeChild].name = newName;
+      children[activeChild].initials = newName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    }
+    if(newGoal){
+      children[activeChild].goal = newGoal;
+    }
+    applyActiveChild();
+    showToast('Profile saved');
+  }
+
+  let toastTimer;
+  function showToast(msg){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  // ---------- Cert detail modal ----------
+  function openCertDetail(childId, cert){
+    document.getElementById('modalThumb').className = 'modal-thumb cat-' + cert.cat;
+    document.getElementById('modalThumb').innerHTML = icons[cert.icon];
+    document.getElementById('modalCatBadge').textContent = cert.cat;
+    document.getElementById('modalTitle').textContent = cert.title;
+    document.getElementById('modalIssuer').textContent = cert.org;
+    document.getElementById('modalDate').textContent = cert.date;
+    document.getElementById('modalStage').textContent = cert.stage;
+    document.getElementById('modalAward').textContent = cert.award;
+    document.getElementById('certModalOverlay').classList.add('show');
+  }
+  function closeCertDetail(){
+    document.getElementById('certModalOverlay').classList.remove('show');
+  }
+  function closeCertDetailOnOverlay(e){
+    if(e.target.id === 'certModalOverlay') closeCertDetail();
+  }
+
+  // ---------- Initial state ----------
+  applyActiveChild();
+</script>
+
+</body>
+</html>
